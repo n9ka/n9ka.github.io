@@ -1,149 +1,97 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gymlog</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <style>
-        :root {
-            --primary: #ff6600;
-            --text: #ffffff;
-            --bg: #111111;
-            --card-bg: rgba(26, 26, 26, 0.9);
-        }
+import React, { useEffect, useState } from 'react';
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+export default function App() {
+  const [countdown, setCountdown] = useState(5);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text);
-            background-color: var(--bg);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          window.location.href = 'https://n9ka.vercel.app/ ';
+          return 0;
         }
+        return prev - 1;
+      });
+    }, 1000);
 
-        /* CLEAN ANIMATED BACKGROUND */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 30%, rgba(255,102,0,0.15), transparent 60%),
-                        radial-gradient(circle at 80% 70%, rgba(255,102,0,0.15), transparent 60%);
-            background-repeat: no-repeat;
-            background-size: 150% 150%;
-            animation: subtleMove 30s ease-in-out infinite;
-            z-index: 0;
-        }
+    return () => clearInterval(timer);
+  }, []);
 
-        @keyframes subtleMove {
-            0% { background-position: 20% 30%, 80% 70%; }
-            50% { background-position: 25% 35%, 75% 65%; }
-            100% { background-position: 20% 30%, 80% 70%; }
-        }
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
-        .card {
-            position: relative;
-            z-index: 1;
-            background-color: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            padding: 2rem;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            animation: fadeInCard 1s ease forwards;
-            transform: scale(0.95);
-            opacity: 0;
-        }
+  return (
+    <div
+      className={`min-h-screen flex flex-col justify-center items-center transition-colors duration-300 font-sans ${
+        isDarkMode ? 'bg-black text-white' : 'bg-white text-black'
+      }`}
+      style={{ fontFamily: 'Verdana, Geneva, Tahoma, sans-serif' }}
+    >
+      {/* Logo */}
+      <div className="text-center px-6">
+        <h1 className="text-7xl md:text-8xl tracking-wider mb-6">
+          <span className="font-normal">n</span>
+          <span className="font-semibold">Eka</span>
+        </h1>
 
-        @keyframes fadeInCard {
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
+        {/* Countdown message */}
+        <p className="text-lg md:text-xl opacity-80 mb-6">
+          You will be redirected in{' '}
+          <span className="font-medium">{countdown}</span> seconds...
+        </p>
 
-        .logo {
-            width: 100px;
-            margin-bottom: 1rem;
-            border-radius: 16px;
-        }
+        {/* Progress bar */}
+        <div className="w-full max-w-xs h-1 bg-gray-700 rounded-full overflow-hidden mb-8">
+          <div
+            className="h-full bg-white transition-all ease-linear"
+            style={{ width: `${(countdown / 5) * 100}%` }}
+          ></div>
+        </div>
 
-        .title {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
+        {/* Manual redirect fallback */}
+        <p className="text-sm opacity-70 text-center max-w-md mx-auto">
+          If you are not redirected automatically,{' '}
+          <a href="https://n9ka.vercel.app/ " className="underline hover:no-underline">
+            click here
+          </a>.
+        </p>
+      </div>
 
-        .subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            color: #ccc;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.8rem 1.6rem;
-            background-color: var(--primary);
-            color: var(--text);
-            border: none;
-            border-radius: 999px;
-            font-size: 1rem;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .btn:hover {
-            background-color: #e55b00;
-            transform: scale(1.05);
-        }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <img src="gymlog.png" alt="Gymlog Logo" class="logo">
-        <h1 class="title">Gymlog</h1>
-        <p class="subtitle" id="subtitle">Suivez votre progression, atteignez vos objectifs.</p>
-        <a href="https://play.google.com/store/apps/details?id=com.neka.gymlog" class="btn" id="storeBtn" target="_blank">
-            Voir sur le Play Store
-        </a>
+      {/* Theme toggle button */}
+      <button
+        onClick={toggleTheme}
+        className={`absolute top-4 right-4 p-2 rounded-full focus:outline-none transition-colors ${
+          isDarkMode ? 'bg-white text-black' : 'bg-black text-white'
+        }`}
+        aria-label="Toggle theme"
+      >
+        {isDarkMode ? (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+              clipRule="evenodd"
+            />
+          </svg>
+        ) : (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+        )}
+      </button>
     </div>
-
-    <script>
-        const translations = {
-            fr: {
-                subtitle: "Suivez votre progression, atteignez vos objectifs.",
-                button: "Voir sur le Play Store"
-            },
-            en: {
-                subtitle: "Track your progress, reach your goals.",
-                button: "View on Play Store"
-            },
-            es: {
-                subtitle: "Sigue tu progreso y alcanza tus objetivos.",
-                button: "Ver en Play Store"
-            }
-        };
-
-        const userLang = navigator.language.slice(0, 2);
-        const selectedLang = translations[userLang] ? userLang : 'en';
-
-        document.getElementById('subtitle').textContent = translations[selectedLang].subtitle;
-        document.getElementById('storeBtn').textContent = translations[selectedLang].button;
-    </script>
-</body>
-</html>
+  );
+}
