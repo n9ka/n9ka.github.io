@@ -1,97 +1,127 @@
-import React, { useEffect, useState } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>nEka Redirect</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      background-color: black;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-export default function App() {
-  const [countdown, setCountdown] = useState(5);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+    .light-mode {
+      background-color: white;
+      color: black;
+    }
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          window.location.href = 'https://n9ka.vercel.app/ ';
-          return 0;
-        }
-        return prev - 1;
-      });
+    h1 {
+      font-size: 4rem;
+      letter-spacing: 0.1em;
+    }
+
+    .n {
+      font-weight: normal;
+    }
+
+    .eka {
+      font-weight: bold;
+    }
+
+    p {
+      opacity: 0.8;
+      margin: 0.5rem 0 2rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      max-width: 300px;
+      height: 4px;
+      background: #444;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .progress {
+      height: 100%;
+      background: white;
+      width: 100%;
+      transition: width 1s linear;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+    }
+
+    button.theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      padding: 10px;
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1><span class="n">n</span><span class="eka">Eka</span></h1>
+  <p>You will be redirected in <span id="countdown">5</span> seconds...</p>
+  <div class="progress-bar">
+    <div class="progress"></div>
+  </div>
+  <p>If you are not redirected automatically, <a href="https://n9ka.vercel.app/ ">click here</a>.</p>
+
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+    <!-- Dark mode icon -->
+    <svg id="dark-icon" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+    </svg>
+    <!-- Light mode icon -->
+    <svg id="light-icon" style="display:none;" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+    </svg>
+  </button>
+
+  <script>
+    const countdownEl = document.getElementById('countdown');
+    const progressEl = document.querySelector('.progress');
+    let countdown = 5;
+
+    setInterval(() => {
+      if (countdown > 0) {
+        countdown--;
+        countdownEl.textContent = countdown;
+        progressEl.style.width = `${(countdown / 5) * 100}%`;
+      } else {
+        window.location.href = 'https://n9ka.vercel.app/ ';
+      }
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, []);
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
-  return (
-    <div
-      className={`min-h-screen flex flex-col justify-center items-center transition-colors duration-300 font-sans ${
-        isDarkMode ? 'bg-black text-white' : 'bg-white text-black'
-      }`}
-      style={{ fontFamily: 'Verdana, Geneva, Tahoma, sans-serif' }}
-    >
-      {/* Logo */}
-      <div className="text-center px-6">
-        <h1 className="text-7xl md:text-8xl tracking-wider mb-6">
-          <span className="font-normal">n</span>
-          <span className="font-semibold">Eka</span>
-        </h1>
-
-        {/* Countdown message */}
-        <p className="text-lg md:text-xl opacity-80 mb-6">
-          You will be redirected in{' '}
-          <span className="font-medium">{countdown}</span> seconds...
-        </p>
-
-        {/* Progress bar */}
-        <div className="w-full max-w-xs h-1 bg-gray-700 rounded-full overflow-hidden mb-8">
-          <div
-            className="h-full bg-white transition-all ease-linear"
-            style={{ width: `${(countdown / 5) * 100}%` }}
-          ></div>
-        </div>
-
-        {/* Manual redirect fallback */}
-        <p className="text-sm opacity-70 text-center max-w-md mx-auto">
-          If you are not redirected automatically,{' '}
-          <a href="https://n9ka.vercel.app/ " className="underline hover:no-underline">
-            click here
-          </a>.
-        </p>
-      </div>
-
-      {/* Theme toggle button */}
-      <button
-        onClick={toggleTheme}
-        className={`absolute top-4 right-4 p-2 rounded-full focus:outline-none transition-colors ${
-          isDarkMode ? 'bg-white text-black' : 'bg-black text-white'
-        }`}
-        aria-label="Toggle theme"
-      >
-        {isDarkMode ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-              clipRule="evenodd"
-            />
-          </svg>
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-          </svg>
-        )}
-      </button>
-    </div>
-  );
-}
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      document.getElementById('dark-icon').style.display = isLight ? 'none' : 'block';
+      document.getElementById('light-icon').style.display = isLight ? 'block' : 'none';
+    }
+  </script>
+</body>
+</html>
